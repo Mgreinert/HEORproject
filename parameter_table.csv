@@ -1,0 +1,4 @@
+drug_name,drug_cost,comparator_name,comparator_cost,prog_prob,util_pf,util_pp
+a,4500,z,3000,0.23,0.86,0.3
+b,3000,y,2400,0.25,0.87,0.4
+c,3600,X,3300,0.24,0.82,0.26

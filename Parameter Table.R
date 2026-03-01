@@ -1,5 +1,5 @@
 #Making a parameter table
-#Making a Data Frame with 7 columns matching the variables. "Drug name", "Drug costs", "comparator name", Comparator Cost", "Progression Probability", "Utility Values pf", Utility values p 
+#Making a Data Frame with 8 columns matching the variables. "Drug name", "Drug costs", "comparator name", Comparator Cost", "Progression Probability", "Utility Values pf", Utility values p 
 parameter_table <- data.frame(
   drug_name = c("a", "b", "c"),
   drug_cost = c(4500, 3000, 3600),
@@ -14,5 +14,8 @@ parameter_table <- data.frame(
 parameter_table
 print(parameter_table)
 library(readr)
-write_csv(parameter_table,"C:/Users/Thesq/Documents/Learning R/parameter_table.csv")
+write_csv(parameter_table,"C:/Users/Thesq/Documents/Learning R/HEORproject/parameter_table_v2.csv")
+#To change the a cost
 parameter_table[2,2] = 3300
+
+

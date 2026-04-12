@@ -104,14 +104,45 @@ calculate_icer <- function(drug_cost, comparator_cost, qaly_drug, qaly_comp){
 print(calculate_icer(4500, 3000, .731, .67))
 
 
+icer_results <- data.frame()
+
 for (i in 1:nrow(data1)) {
-  # Create a sample data frame
-  row_data <- data1[i, ]
-  print(row_data)
-  drug_cost <- row_data$drug_cost
-  qaly_drug <- row_data$qaly_drug
   for (j in 1:nrow(data1)) {
-    row_dataj <- data1[j, ]
-    print(calculate_icer(drug_cost, row_dataj$comparator_cost, qaly_drug, row_dataj$qaly_comp))
+    
+    # Use drug row's utility values for both calculations
+    qaly_drug_i <- combine_qaly_drug(data1$util_pp[i], data1$util_pf[i], data1$prog_prob_drug[i])
+    qaly_comp_j <- combine_qaly_drug(data1$util_pp[i], data1$util_pf[i], data1$prog_prob_comp[j])
+    
+    icer_val <- calculate_icer(
+      data1$drug_cost[i],
+      data1$comparator_cost[j],
+      qaly_drug_i,
+      qaly_comp_j
+    )
+    icer_results <- rbind(icer_results, data.frame(
+      drug       = data1$drug_name[i],
+      comparator = data1$comparator_name[j],
+      icer       = round(icer_val, 2),
+      delta_cost = data1$drug_cost[i] - data1$comparator_cost[j],
+      delta_qaly = round(qaly_drug_i - qaly_comp_j, 4)
+    ))
   }
 }
+
+#Add Dominance check 
+
+icer_results <- icer_results %>%
+  mutate(
+    interpretation = case_when(
+      delta_cost == 0 & delta_qaly > 0  ~ "Same cost, more effective (favorable)",
+      delta_cost == 0 & delta_qaly < 0  ~ "Same cost, less effective (unfavorable)",
+      delta_cost < 0 & delta_qaly > 0   ~ "Dominant",
+      delta_cost > 0 & delta_qaly < 0   ~ "Dominated",
+      delta_cost >= 0 & delta_qaly > 0  ~ "More costly, more effective",
+      delta_cost <= 0 & delta_qaly < 0  ~ "Less costly, less effective",
+      TRUE ~ "Check data"
+    )
+  )
+
+print(icer_results)
+

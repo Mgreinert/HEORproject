@@ -11,6 +11,7 @@
 #step 3: Multiply 1 (patient#) by (1 - prog_prob_drug)
 #Step 4: Multiply result of step 3 by util_pf
 #Step 5: Add the result of Step #2 and Step #4 to get the QALY for drug
+#Step 6: Add dominance check
 library(readr)
 library(dplyr)
 
